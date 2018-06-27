@@ -1,0 +1,116 @@
+// #include "server.h"
+// #include "csapp.h"
+// #include "debug.h"
+// #include "protocol.h"
+// #include "mailbox.h"
+// #include "directory.h"
+// #include "thread_counter.h"
+//
+// THREAD_COUNTER *thread_counter;
+//
+// static uint32_t get_seconds();
+//
+// /*
+//  * Thread function for the thread that handles client requests.
+//  *
+//  * The arg pointer point to the file descriptor of client connection.
+//  * This pointer must be freed after the file descriptor has been
+//  * retrieved.
+//  */
+// void *bvd_client_service(void *arg) {
+//     bvd_packet_header *header = calloc(sizeof(bvd_packet_header), sizeof(char));
+//     void **payload = calloc(sizeof(void **), sizeof(char));
+//     int *fd = arg;
+//
+//     pthread_t tid = 0;
+//
+//     while(1) {
+//         if(proto_recv_packet(*fd, header, payload) != -1) {
+//             switch(header->type) {
+//                 case BVD_NO_PKT:
+//                     break;
+//                 case BVD_LOGIN_PKT:
+//                     if(tid == 0) {
+//                         // start mailbox service
+//                     } else {
+//                         // send NACK
+//                     }
+//                     break;
+//                 case BVD_LOGOUT_PKT:
+//                     if(tid == 0) {
+//                         // send NACK
+//                     } else {
+//                         // send LOGOUT and ACK end mailbox service.
+//                     }
+//                     break;
+//                 case BVD_USERS_PKT:
+//                     // Setup the payload.
+//                     *payload = calloc(sizeof(char *), sizeof(char));
+//                     char **users = dir_all_handles();
+//
+//                     if(users != NULL) {
+//                         strncat(*payload, *users, strlen(*users));
+//                         strncat(*payload, "\n", 1);
+//
+//                         users++;
+//                     }
+//
+//                     // Setup the header.
+//                     header->payload_length = strlen(*payload);
+//                     header->timestamp_sec = get_seconds();
+//                     header->timestamp_sec = get_seconds() * 1000000000;
+//
+//                     if(tid == 0) {
+//                         proto_send_packet(*fd, header, *payload);
+//                     }
+//
+//                     break;
+//                 case BVD_SEND_PKT:
+//                     if(tid == 0) {
+//                         // send NACK
+//                     } else {
+//                         // send ACK and RRCPT to sender
+//                         // send DLVR to recipient
+//                     }
+//                     break;
+//                 case BVD_ACK_PKT:
+//                     break;
+//                 case BVD_NACK_PKT:
+//                     break;
+//                 case BVD_DLVR_PKT:
+//                     break;
+//                 case BVD_RRCPT_PKT:
+//                     break;
+//                 case BVD_BOUNCE_PKT:
+//                     break;
+//                 default:
+//                     break;
+//             }
+//         }
+//
+//         // Start a new thread and run bvd_mailbox_service.
+//         Pthread_create(&tid, NULL, bvd_mailbox_service, fd);
+//     }
+// }
+//
+//
+// /*
+//  * Once the file descriptor and mailbox have been retrieved,
+//  * this structure must be freed.
+//  */
+// void *bvd_mailbox_service(void *arg) {
+//     return NULL;
+// }
+//
+// static uint32_t get_seconds() {
+//     time_t now;
+//     struct tm *tm;
+//
+//     now = time(0);
+//     if ((tm = localtime (&now)) == NULL) {
+//        debug("get_seconds(): Could not extract current time.");
+//        return -1;
+//     }
+//
+//     return tm->tm_sec;
+// }
